@@ -6,6 +6,7 @@ FILENAME: main.cpp
 DESCRIPTION: Petit jeu rogue-lite
 */
 
+#include "mesFonctions.h"
 #include <iostream>
 using namespace::std;
 
@@ -14,4 +15,5 @@ int main(){
 	locale::global(locale{ "" });
 	srand(time(NULL));
 
+	menu();
 }

@@ -19,3 +19,14 @@ void writeClose(fstream& file, string filename);
 
 void readOpen(fstream& file, string filename);
 void readClose(fstream & file, string filename);
+
+void sauvegarde(fstream& file, string filename, string name, int stats[]);
+void chargement(fstream& file, string filename);
+
+void menu();
+void menuJeu();
+void afficherMonstre(int monstre[][7], int stats[]);
+void afficherStats(int stats[]);
+void initialiserPersonnage(string &name,int stats[]);
+
+void magasin(int stats[]);
