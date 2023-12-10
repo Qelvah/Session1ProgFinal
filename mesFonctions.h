@@ -12,21 +12,27 @@ DESCRIPTION: Petit jeu rogue-lite
 using namespace::std;
 #include <fstream>
 
-void levelUpCheck(int statistics[]);
+void levelUpCheck();
 
-void writeOpen(fstream& file, string filename);
-void writeClose(fstream& file, string filename);
+void writeOpen();
+void writeClose();
 
-void readOpen(fstream& file, string filename);
-void readClose(fstream & file, string filename);
+void readOpen();
+void readClose();
 
-void sauvegarde(fstream& file, string filename, string name, int stats[]);
-void chargement(fstream& file, string filename);
+void sauvegarde();
+void chargement();
 
 void menu();
-void menuJeu();
-void afficherMonstre(int monstre[][7], int stats[]);
-void afficherStats(int stats[]);
-void initialiserPersonnage(string &name,int stats[]);
+void initialiserPersonnage();
 
-void magasin(int stats[]);
+void menuJeu();
+void afficherMonstre();
+void afficherStats();
+//void afficherALL(int monsterActive[], int stats[]);
+void combatLoop();
+void turnPlayer(int baseDamage);
+void turnMonster(int baseDamage);
+void magasin();
+
+void pressKey();
