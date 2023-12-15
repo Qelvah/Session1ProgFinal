@@ -25,21 +25,19 @@ int temp;
 //Variable utilisé pour les choix demadné
 char answer;
 
-fstream file;
-string filename = "sauvegarde.txt";
+string monsterName[6] = { "Goblin", "Hobgoblin", "Troll", "Dragon", " ", "(Quickened) Big Daddy" };
 
-string monsterName[6] = { "Goblin", "Hobgoblin", "Troll", "Dragon", " ", "Big Daddy" };
-
+/// 0 = Niveau, 1 = EXP_Gain, 2 = curHP, 3 = maxHP, 4 = ATK, 5 = DEF, 6 = SPE, 7 = GOLD_Gain
 int monsterStats[6][8] = { { 3,300,2,2,2,2,2, 5 },
-					{ 6,1300,4,4,4,3,4,15},
-					{ 12,3300,6,6,5,6,2, 30},
-					{ 24,6300,10,10,7,8, 12, 50},
+					{ 6,1300,6,6,4,3,4,15},
+					{ 12,3300,12,12,7,6,2, 30},
+					{ 24,6300,22,22,13,9,12, 50},
 					{ 0 },
-					{ 100, 0, 15, 15, 12, 14, 30, 0} };
+					{ 100, 0, 36, 36, 22, 14, 30, 0} };
 
-/// 0 = Niveau, 1 = EXP, 2 = curHP, 3 = maxHP, 4 = ATK, 5 = DEF, 6 = SPE, 7 = GOLD
 int monsterActive[8];
 
+// Menu principale à l'ouverture. Création de personnage ou chargement d'une sauvegarde
 void menu() {
 
 	do {
@@ -66,8 +64,10 @@ void menu() {
 		case 'B':
 			system("cls");
 			chargement();
-			levelUpCheck();
-			menuJeu();
+			if (stats[0] != 0) {
+				levelUpCheck();
+				menuJeu();
+			}
 			break;
 		case 'Q':
 			exit;
@@ -80,6 +80,7 @@ void menu() {
 	} while (answer != 'Q');
 }
 
+// Création d'un personnage, demande du nom du personnage et initialisation des statistiques.
 void initialiserPersonnage()
 {
 	cout << "========================================" << endl;
@@ -98,6 +99,7 @@ void initialiserPersonnage()
 		stats[i] = rand() % (5 + 1 - 3) + 3;
 	}
 
+	// 2 = current HP, 3 = maximum HP, 0 = Niveau, 1 = Experience, 7 = Gold, 8 = Game Progress / Encounters
 	stats[2] = stats[3];
 	stats[0] = 1;
 	stats[1] = 0;
@@ -107,6 +109,8 @@ void initialiserPersonnage()
 	sauvegarde();
 }
 
+// Déroulement du jeu, basé sur le progrès du jeu / encounters (stats[8])
+// Boss à 6, magasin à 5, 1-4 combat normal.
 void menuJeu() {
 	do {
 		system("cls");
@@ -128,12 +132,37 @@ void menuJeu() {
 			for (int i = 0; i < 8; i++) {
 				monsterActive[i] = monsterStats[stats[8]][i];
 			}
+
+			if (stats[8] == 5) {
+				temp = rand() % (4 + 1 - 1) + 1;
+				switch (temp) {
+				case 1: 
+					monsterName[5] = "(Angry) Big Daddy";
+					monsterActive[4] *= 1.2;
+					break;
+				case 2: 
+					monsterName[5] = "(Hardened) Big Daddy";
+					monsterActive[5] *= 1.2;
+					break;
+				case 3:
+					monsterName[5] = "(Quickened) Big Daddy";
+					monsterActive[6] *= 1.2;
+					break;
+				case 4:
+					monsterName[5] = "(Healthy) Big Daddy";
+					monsterActive[2] *= 1.2;
+					monsterActive[3] *= 1.2;
+					break;
+				}
+			}
+
 			combatLoop();
 			break;
 		}
 	} while (answer != 'Q');
 }
 
+// Affiche les statistiques du monstre.
 void afficherMonstre()
 {
 	int x = stats[8];
@@ -148,6 +177,7 @@ void afficherMonstre()
 		cout << "---------------------------------------------------" << endl;
 }
 
+// Affiche les statistiques du joueur.
 void afficherStats()
 {
 		cout << "---------------------------------------------------" << endl;
@@ -159,12 +189,13 @@ void afficherStats()
 		cout << "---------------------------------------------------" << endl;	
 }
 
-//void afficherALL(int monsterActive[], int stats[]) {
+//void afficherALL() {
 //	system("cls");
 //	afficherStats(stats);
 //	afficherMonstre(monsterActive, stats);
 //}
 
+// Combat tour par tour, basé sur la vitesse du joueur et du monstre.
 void combatLoop() {
 	int baseDamage = 0;
 	system("cls");
@@ -173,16 +204,19 @@ void combatLoop() {
 	pressKey();
 	system("cls");
 
-
+	// Tant que quelqu'un est en vie
 	do {
+		// Si le joueur est plus vite, attaque en premier.
 		if (stats[6] > monsterActive[6]) {
 			turnPlayer(baseDamage);
 			turnMonster(baseDamage);
 		}
+		// Sinon, le monstre attaque en premier.
 		else if (stats[6] < monsterActive[6]){
 			turnMonster(baseDamage);
 			turnPlayer(baseDamage);
 		} 
+		// Si la vitesse des deux individus est égal, déterminer aléatoirement.
 		else {
 			int tempValue = rand () % (1 + 1 - 0 ) - 0;
 			if (tempValue == 0) {
@@ -197,26 +231,45 @@ void combatLoop() {
 
 	} while (stats[2] > 0 && monsterActive[2] > 0);
 
-	stats[8]++; 
 	cout << endl << endl;
 
+	// Après avoir éliminé le monstre, obtient expérience et gold, ainsi que check les conditions pour monter de niveau.
 	if (monsterActive[2] < 1) {
+		system("cls");
+		afficherStats();
+		afficherMonstre();
+
+		// Après le combat, augmente le progrès du jeu de 1.
+		stats[8]++;
+
 		cout << "Vous êtes vainqueur!" << endl;
+		pressKey();
 		stats[1] += monsterActive[1];
 		stats[7] += monsterActive[7];
 		levelUpCheck();
 		stats[2] = stats[3];
+
+
+
 		menuJeu();
 	}
+	// Si échoué à éliminé le monstre, jeu perdu, sauvegarde supprimé.
 	else {
-		cout << "Vous avez perdu ... " << endl; 
-		pressKey();
+		system("cls");
+		afficherStats();
+		afficherMonstre();
 		remove("sauvegarde.txt");
+		cout << "Vous avez perdu ... " << endl; 		
+		pressKey();
+
 		system("cls");
 		menu();
 	}
+
+
 }
 
+// Détermine le nombre de dégat que le joueur causera basé sur les statistiques du monstre.
 void turnPlayer(int baseDamage) {
 
 	if (stats[2] > 0 ){
@@ -241,6 +294,7 @@ void turnPlayer(int baseDamage) {
 	}
 }
 
+// Détermine le nombre de dégat que le monstre causera basé sur les statistiques du joueur.
 void turnMonster(int baseDamage) {
 	if (monsterActive[2] > 0) {
 		baseDamage = rand() % ((monsterActive[4] + 1) + 1 - (monsterActive[4] - 1)) + (monsterActive[4] - 1);
@@ -264,6 +318,7 @@ void turnMonster(int baseDamage) {
 	}
 }
 
+// Regarde les conditions pour monter de niveau. Sauvegarde après chaque check, au cas que le jeu ferme durant cette procédure.
 void levelUpCheck() {
 
 	do {
@@ -300,6 +355,7 @@ void levelUpCheck() {
 	} while (stats[1] >= stats[0] * 100);
 }
 
+// Magasin pour acheter des statistiques pour devenir plus fort, utilise Gold comme monnaie.
 void magasin() {
 	system("cls");
 	afficherStats();
@@ -326,6 +382,7 @@ void magasin() {
 
 		switch (answer) {
 			case 'A': 
+				// 7 = Gold, 2 = current HP, 3 = max HP
 				if (stats[7] >= 20) {
 					stats[3]++;
 					stats[2]++;
@@ -338,6 +395,7 @@ void magasin() {
 				pressKey();
 				break;
 			case 'B':
+				// 7 = Gold, 4 = Attaque
 				if (stats[7] >= 30) {
 					stats[4]++;
 					stats[7] -= 30; cout << "Vous avez obtenu un point d'attaque." << endl;
@@ -348,6 +406,7 @@ void magasin() {
 				pressKey();
 				break;
 			case 'C':
+				// 7 = Gold, 5 = Defense
 				if (stats[7] >= 40) {
 					stats[5]++;
 					stats[7] -= 40; cout << "Vous avez obtenu un point de defense." << endl;
@@ -358,6 +417,7 @@ void magasin() {
 				pressKey();
 				break;
 			case 'D':
+				// 7 = Gold, 6 = Vitesse
 				if (stats[7] >= 50) {
 					stats[6]++;
 					stats[7] -= 50; cout << "Vous avez obtenu un point de vitesse." << endl;
@@ -380,8 +440,11 @@ void magasin() {
 	stats[8]++;
 }
 
+// Sauvegarde du jeu. Écrit le nom et le tableau stats[] dans un fichier qui peut être utilisé pour charger le jeu à nouveau. Perdu lors d'une défaite.
 void sauvegarde() {
-	writeOpen();
+	fstream file;
+
+	writeOpen(file);
 
 	file << name << " ";
 
@@ -389,41 +452,56 @@ void sauvegarde() {
 		file << stats[i] << " ";
 	}
 
-	writeClose();
+	writeClose(file);
 }
 
+// Chargement du jeu. Écrit le nom dans la variable name et les valeurs numériques dans stats[].
 void chargement() {
-	readOpen();
+	fstream file;
 
-	file >> name;
-	for (int i = 0; i < 9; i++) {
-		file >> stats[i];
+	readOpen(file);
+	if (!file) {
+		cout << "ERREUR DE FICHIER (LECTURE)" << endl;
+		for (int i = 0; i < 9; i++) {
+			stats[i] = 0;
+		}
+		pressKey();
+		system("cls");
 	}
-	readClose();
+	else {
+		file >> name;
+		for (int i = 0; i < 9; i++) {
+			file >> stats[i];
+		}
+	}
+	readClose(file);
 }
 
-void writeOpen() {
+// Ouverture du fichier sauvegarde en écriture.
+void writeOpen(fstream& file) {
 	file.open("sauvegarde.txt", ios::out);
 	if (!file) {
 		cout << "ERREUR DE FICHIER (ECRITURE)" << endl;
+		pressKey();
 	}
 }
 
-void writeClose() {
+// Fermeture du fichier sauvegarde en écriture.
+void writeClose(fstream& file) {
 	file.close();
 }
 
-void readOpen() {
+// Ouverture du fichier de sauvegarde en lecture.
+void readOpen(fstream& file) {
 	file.open("sauvegarde.txt", ios::in);
-	if (!file) {
-		cout << "ERREUR DE FICHIER (LECTURE)" << endl;
-	}
 }
 
-void readClose() {
+// Fermeture du fichier de sauvegarde en lecture.
+void readClose(fstream& file) {
 	file.close();
 }
 
+// Demande d'appuyez sur une touche avant de continuer.
 void pressKey() {
 	cout << "Appuyez sur une touche pour continuer." << endl;
 	system("pause>0");

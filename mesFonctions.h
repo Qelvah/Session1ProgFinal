@@ -14,11 +14,11 @@ using namespace::std;
 
 void levelUpCheck();
 
-void writeOpen();
-void writeClose();
+void writeOpen(fstream& file);
+void writeClose(fstream& file);
 
-void readOpen();
-void readClose();
+void readOpen(fstream& file);
+void readClose(fstream& file);
 
 void sauvegarde();
 void chargement();
@@ -29,7 +29,7 @@ void initialiserPersonnage();
 void menuJeu();
 void afficherMonstre();
 void afficherStats();
-//void afficherALL(int monsterActive[], int stats[]);
+//void afficherALL();
 void combatLoop();
 void turnPlayer(int baseDamage);
 void turnMonster(int baseDamage);
