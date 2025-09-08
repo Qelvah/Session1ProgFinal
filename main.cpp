@@ -17,7 +17,7 @@ int main(){
 
 	locale::global(locale{ "" });
 	srand(time(NULL));
-
+	std::print("Salut, c'est moi le print super utile !");
 	menu();
 }
 
