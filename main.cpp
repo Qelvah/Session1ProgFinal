@@ -6,6 +6,9 @@ FILENAME: main.cpp
 DESCRIPTION: Petit jeu rogue-lite
 */
 
+/* SESSION 5 - NOUVELLES TECHNO LAB WITH GIT
+HELLO*/
+
 #include "mesFonctions.h"
 #include <iostream>
 using namespace::std;
@@ -17,3 +20,4 @@ int main(){
 
 	menu();
 }
+
