@@ -35,4 +35,8 @@ void turnPlayer(int baseDamage);
 void turnMonster(int baseDamage);
 void magasin();
 
+
 void pressKey();
+
+
+/* SESSION 5 GET HACKED*/

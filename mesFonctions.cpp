@@ -11,6 +11,8 @@ DESCRIPTION: Petit jeu rogue-lite
 using namespace::std;
 #include <fstream>
 
+/* SESSION 5 I WAS HERE */
+
 /// <summary>
 /// 0 = Niveau, 1 = EXP, 2 = curHP, 3 = maxHP, 4 = ATK, 5 = DEF, 6 = SPE, 7 = GOLD, 8 = ENC
 /// </summary>
@@ -19,10 +21,10 @@ int stats[9] = { 0 };
 // Nom du joueur
 string name = "";
 
-//Variable utilisé dans levelUpCheck
+//Variable utilisÃ© dans levelUpCheck
 int temp;
 
-//Variable utilisé pour les choix demadné
+//Variable utilisÃ© pour les choix demadnÃ©
 char answer;
 
 string monsterName[6] = { "Goblin", "Hobgoblin", "Troll", "Dragon", " ", "(Quickened) Big Daddy" };
@@ -37,7 +39,7 @@ int monsterStats[6][8] = { { 3,300,2,2,2,2,2, 5 },
 
 int monsterActive[8];
 
-// Menu principale à l'ouverture. Création de personnage ou chargement d'une sauvegarde
+// Menu principale Ã  l'ouverture. CrÃ©ation de personnage ou chargement d'une sauvegarde
 void menu() {
 
 	do {
@@ -46,8 +48,8 @@ void menu() {
 		cout << "Bienvenue a C++ adventures!" << endl;
 		cout << "===========================" << endl << endl;
 
-		cout << "A) Crée votre personnage" << endl;
-		cout << "B) Reprendre a la dernière sauvegarde" << endl;
+		cout << "A) CrÃ©e votre personnage" << endl;
+		cout << "B) Reprendre a la derniÃ¨re sauvegarde" << endl;
 		cout << "Q) Quitter l'aventure" << endl << endl;
 
 		cout << "Votre Action: ";
@@ -73,18 +75,18 @@ void menu() {
 			exit;
 			break;
 		default:
-			cout << "Commande entrez érroné." << endl;
+			cout << "Commande entrez Ã©rronÃ©." << endl;
 			pressKey();
 			system("cls");
 		}
 	} while (answer != 'Q');
 }
 
-// Création d'un personnage, demande du nom du personnage et initialisation des statistiques.
+// CrÃ©ation d'un personnage, demande du nom du personnage et initialisation des statistiques.
 void initialiserPersonnage()
 {
 	cout << "========================================" << endl;
-	cout << "   	Création de votre personnage!	 " << endl;
+	cout << "   	CrÃ©ation de votre personnage!	 " << endl;
 	cout << "========================================" << endl;
 
 	cout << "========================================" << endl;
@@ -109,8 +111,8 @@ void initialiserPersonnage()
 	sauvegarde();
 }
 
-// Déroulement du jeu, basé sur le progrès du jeu / encounters (stats[8])
-// Boss à 6, magasin à 5, 1-4 combat normal.
+// DÃ©roulement du jeu, basÃ© sur le progrÃ¨s du jeu / encounters (stats[8])
+// Boss Ã  6, magasin Ã  5, 1-4 combat normal.
 void menuJeu() {
 	do {
 		system("cls");
@@ -195,7 +197,7 @@ void afficherStats()
 //	afficherMonstre(monsterActive, stats);
 //}
 
-// Combat tour par tour, basé sur la vitesse du joueur et du monstre.
+// Combat tour par tour, basÃ© sur la vitesse du joueur et du monstre.
 void combatLoop() {
 	int baseDamage = 0;
 	system("cls");
@@ -216,7 +218,7 @@ void combatLoop() {
 			turnMonster(baseDamage);
 			turnPlayer(baseDamage);
 		} 
-		// Si la vitesse des deux individus est égal, déterminer aléatoirement.
+		// Si la vitesse des deux individus est Ã©gal, dÃ©terminer alÃ©atoirement.
 		else {
 			int tempValue = rand () % (1 + 1 - 0 ) - 0;
 			if (tempValue == 0) {
@@ -233,16 +235,16 @@ void combatLoop() {
 
 	cout << endl << endl;
 
-	// Après avoir éliminé le monstre, obtient expérience et gold, ainsi que check les conditions pour monter de niveau.
+	// AprÃ¨s avoir Ã©liminÃ© le monstre, obtient expÃ©rience et gold, ainsi que check les conditions pour monter de niveau.
 	if (monsterActive[2] < 1) {
 		system("cls");
 		afficherStats();
 		afficherMonstre();
 
-		// Après le combat, augmente le progrès du jeu de 1.
+		// AprÃ¨s le combat, augmente le progrÃ¨s du jeu de 1.
 		stats[8]++;
 
-		cout << "Vous êtes vainqueur!" << endl;
+		cout << "Vous Ãªtes vainqueur!" << endl;
 		pressKey();
 		stats[1] += monsterActive[1];
 		stats[7] += monsterActive[7];
@@ -253,7 +255,7 @@ void combatLoop() {
 
 		menuJeu();
 	}
-	// Si échoué à éliminé le monstre, jeu perdu, sauvegarde supprimé.
+	// Si Ã©chouÃ© Ã  Ã©liminÃ© le monstre, jeu perdu, sauvegarde supprimÃ©.
 	else {
 		system("cls");
 		afficherStats();
@@ -269,7 +271,7 @@ void combatLoop() {
 
 }
 
-// Détermine le nombre de dégat que le joueur causera basé sur les statistiques du monstre.
+// DÃ©termine le nombre de dÃ©gat que le joueur causera basÃ© sur les statistiques du monstre.
 void turnPlayer(int baseDamage) {
 
 	if (stats[2] > 0 ){
@@ -294,7 +296,7 @@ void turnPlayer(int baseDamage) {
 	}
 }
 
-// Détermine le nombre de dégat que le monstre causera basé sur les statistiques du joueur.
+// DÃ©termine le nombre de dÃ©gat que le monstre causera basÃ© sur les statistiques du joueur.
 void turnMonster(int baseDamage) {
 	if (monsterActive[2] > 0) {
 		baseDamage = rand() % ((monsterActive[4] + 1) + 1 - (monsterActive[4] - 1)) + (monsterActive[4] - 1);
@@ -318,13 +320,13 @@ void turnMonster(int baseDamage) {
 	}
 }
 
-// Regarde les conditions pour monter de niveau. Sauvegarde après chaque check, au cas que le jeu ferme durant cette procédure.
+// Regarde les conditions pour monter de niveau. Sauvegarde aprÃ¨s chaque check, au cas que le jeu ferme durant cette procÃ©dure.
 void levelUpCheck() {
 
 	do {
 		if (stats[1] >= stats[0] * 100) {
 			system("cls");
-			cout << "Vous avez monté de niveau!" << endl;
+			cout << "Vous avez montÃ© de niveau!" << endl;
 			stats[1] -= stats[0] * 100;
 			//Niveau
 			stats[0]++;
@@ -359,7 +361,7 @@ void levelUpCheck() {
 void magasin() {
 	system("cls");
 	afficherStats();
-	cout << "Vous avez trouvé un lieu de prière." << endl;
+	cout << "Vous avez trouvÃ© un lieu de priÃ¨re." << endl;
 	pressKey();
 
 	do {
@@ -373,7 +375,7 @@ void magasin() {
 		cout << "B) Gain d'attaque (30gp)" << endl;
 		cout << "C) Gain de defense (40gp)" << endl;
 		cout << "D) Gain de Vitesse (50gp)" << endl;
-		cout << "Q) Quittez la zone de prière" << endl << endl;
+		cout << "Q) Quittez la zone de priÃ¨re" << endl << endl;
 
 		cout << "Votre action : ";
 
@@ -428,11 +430,11 @@ void magasin() {
 				pressKey();
 				break;
 			case 'Q':
-				cout << "Vous avez quittez la zone de prière." << endl;
+				cout << "Vous avez quittez la zone de priÃ¨re." << endl;
 				pressKey();
 				break;
 			default: 
-				cout << "La commande entrez est érronée." << endl;
+				cout << "La commande entrez est Ã©rronÃ©e." << endl;
 				pressKey();
 		}
 	} while (answer != 'Q');
@@ -440,7 +442,7 @@ void magasin() {
 	stats[8]++;
 }
 
-// Sauvegarde du jeu. Écrit le nom et le tableau stats[] dans un fichier qui peut être utilisé pour charger le jeu à nouveau. Perdu lors d'une défaite.
+// Sauvegarde du jeu. Ã‰crit le nom et le tableau stats[] dans un fichier qui peut Ãªtre utilisÃ© pour charger le jeu Ã  nouveau. Perdu lors d'une dÃ©faite.
 void sauvegarde() {
 	fstream file;
 
@@ -455,7 +457,7 @@ void sauvegarde() {
 	writeClose(file);
 }
 
-// Chargement du jeu. Écrit le nom dans la variable name et les valeurs numériques dans stats[].
+// Chargement du jeu. Ã‰crit le nom dans la variable name et les valeurs numÃ©riques dans stats[].
 void chargement() {
 	fstream file;
 
@@ -477,7 +479,7 @@ void chargement() {
 	readClose(file);
 }
 
-// Ouverture du fichier sauvegarde en écriture.
+// Ouverture du fichier sauvegarde en Ã©criture.
 void writeOpen(fstream& file) {
 	file.open("sauvegarde.txt", ios::out);
 	if (!file) {
@@ -486,7 +488,7 @@ void writeOpen(fstream& file) {
 	}
 }
 
-// Fermeture du fichier sauvegarde en écriture.
+// Fermeture du fichier sauvegarde en Ã©criture.
 void writeClose(fstream& file) {
 	file.close();
 }
@@ -506,3 +508,4 @@ void pressKey() {
 	cout << "Appuyez sur une touche pour continuer." << endl;
 	system("pause>0");
 }
+
